@@ -15,7 +15,6 @@ jobs:
   - script: curl --fail https://flakeyfunctions.azurewebsites.net/api/randomfail?
     name: "curl1"
     displayName: 'Curl flakey function and fail if 500 error returned'
-    continueOnError: true
 
 - job: CurlRetry1
   dependsOn: Curl
@@ -23,7 +22,6 @@ jobs:
   steps:
   - script: curl --fail https://flakeyfunctions.azurewebsites.net/api/randomfail?
     displayName: 'Retry 1'
-    continueOnError: true
 
 - job: CurlRetry2
   dependsOn: CurlRetry1
@@ -31,7 +29,6 @@ jobs:
   steps:
   - script: curl --fail https://flakeyfunctions.azurewebsites.net/api/randomfail?
     displayName: 'Retry 2'
-    continueOnError: false
 
 - job: Complete
   dependsOn: CurlRetry2
