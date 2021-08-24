@@ -34,6 +34,7 @@ jobs:
     continueOnError: false
 
 - job: Complete
-  dependsOn: [Curl,CurlRetry1,CurlRetry2]
+  dependsOn: CurlRetry2
+  condition: succeeded()
   steps:
     - script: echo "Congrats one one of 3 attempts you won a 50/50 draw"
