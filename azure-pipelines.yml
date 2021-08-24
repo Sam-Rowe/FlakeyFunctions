@@ -1,0 +1,27 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: curl --fail https://flakeyfunctions.azurewebsites.net/api/randomfail?
+  displayName: 'Curl flakey function and fail if 500 error returned'
+  continueOnError: true
+
+- script: curl --fail https://flakeyfunctions.azurewebsites.net/api/randomfail?
+  displayName: 'Retry 1'
+  continueOnError: true
+  condition: failed()
+
+- script: curl --fail https://flakeyfunctions.azurewebsites.net/api/randomfail?
+  displayName: 'Retry 2'
+  continueOnError: true
+  condition: failed()
+
+- script: echo "Congrats one one of 3 attempts you won a 50/50 draw"
