@@ -9,19 +9,30 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: curl --fail https://flakeyfunctions.azurewebsites.net/api/randomfail?
-  displayName: 'Curl flakey function and fail if 500 error returned'
-  continueOnError: true
+jobs:
+- job: Curl
+  steps:
+  - script: curl --fail https://flakeyfunctions.azurewebsites.net/api/randomfail?
+    name: "curl1"
+    displayName: 'Curl flakey function and fail if 500 error returned'
+    continueOnError: true
 
-- script: curl --fail https://flakeyfunctions.azurewebsites.net/api/randomfail?
-  displayName: 'Retry 1'
-  continueOnError: true
+- job: CurlRetry1
+  dependsOn: Curl
   condition: failed()
+  steps:
+  - script: curl --fail https://flakeyfunctions.azurewebsites.net/api/randomfail?
+    displayName: 'Retry 1'
+    continueOnError: true
 
-- script: curl --fail https://flakeyfunctions.azurewebsites.net/api/randomfail?
-  displayName: 'Retry 2'
-  continueOnError: true
+- job: CurlRetry2
+  dependsOn: CurlRetry1
   condition: failed()
+  steps:
+  - script: curl --fail https://flakeyfunctions.azurewebsites.net/api/randomfail?
+    displayName: 'Retry 2'
+    continueOnError: false
 
-- script: echo "Congrats one one of 3 attempts you won a 50/50 draw"
+- job: Complete
+  steps:
+    - script: echo "Congrats one one of 3 attempts you won a 50/50 draw"
