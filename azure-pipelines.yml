@@ -35,6 +35,6 @@ jobs:
 
 - job: Complete
   dependsOn: CurlRetry2
-  condition: succeeded()
+  condition: in(dependencies.CurlRetry2.result, 'Succeeded', 'Skipped')
   steps:
     - script: echo "Congrats one one of 3 attempts you won a 50/50 draw"
